@@ -1,4 +1,4 @@
-# Render blueprint: the tracker + its two scheduled reminders.
+# Render blueprint: the tracker. (Slack + reminder crons left out for now; see git history to restore.)
 # Fill the secrets in the Render dashboard (sync: false = never stored in git).
 # Not yet deployed: check it on the first Render deploy.
 services:
@@ -21,41 +21,8 @@ services:
         generateValue: true
       - key: INGEST_SECRET
         generateValue: true
-      - key: CRON_SECRET
-        generateValue: true
       - key: ADMIN_CODE
         sync: false
       - key: APP_URL
-        sync: false
-      - { key: SLACK_WEBHOOK_APPLICATIONS, sync: false }
-      - { key: SLACK_WEBHOOK_BOOKED_CALLS, sync: false }
-      - { key: SLACK_WEBHOOK_PRE_CALL, sync: false }
-      - { key: SLACK_WEBHOOK_CALL_REPORTS, sync: false }
-      - { key: SLACK_WEBHOOK_PAYMENTS, sync: false }
-      - { key: SLACK_WEBHOOK_EOD_REPORTS, sync: false }
-      - { key: SLACK_WEBHOOK_SALES_FEEDBACK, sync: false }
-      - { key: SLACK_WEBHOOK_ONBOARDING, sync: false }
+        value: https://echelon-sales-tracker.onrender.com
 
-  # Daily EOD reminder, 18:00 UTC (replaces the Discord Zap AUTO-004)
-  - type: cron
-    name: echelon-tracker-eod-reminder
-    runtime: node
-    buildCommand: echo "nothing to build"
-    startCommand: 'curl -fsS -X POST "$APP_URL/api/cron/eod-reminder" -H "x-cron-secret: $CRON_SECRET"'
-    schedule: "0 18 * * *"
-    envVars:
-      - { key: APP_URL, sync: false }
-      - key: CRON_SECRET
-        fromService: { type: web, name: echelon-sales-tracker, envVarKey: CRON_SECRET }
-
-  # Weekly feedback reminder, Fridays 17:00 UTC (replaces AUTO-001)
-  - type: cron
-    name: echelon-tracker-feedback-reminder
-    runtime: node
-    buildCommand: echo "nothing to build"
-    startCommand: 'curl -fsS -X POST "$APP_URL/api/cron/feedback-reminder" -H "x-cron-secret: $CRON_SECRET"'
-    schedule: "0 17 * * 5"
-    envVars:
-      - { key: APP_URL, sync: false }
-      - key: CRON_SECRET
-        fromService: { type: web, name: echelon-sales-tracker, envVarKey: CRON_SECRET }
