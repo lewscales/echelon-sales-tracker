@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  /* Accent defaults — overridden at runtime from src/lib/config.ts (THEME). */
+  --accent: #3b6bff;
+  --accent-light: #6e8bff;
+  --accent-deep: #2a4fcc;
+  --accent-rgb: 59 107 255;
+  --accent-light-rgb: 110 139 255;
+  --accent-deep-rgb: 42 79 204;
+}
+
+html,
+body {
+  background: #0c0e12;
+  color: #eceff4;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  position: relative;
+  overflow-x: hidden;
+}
+
+@layer components {
+  .display {
+    font-family: var(--font-display), system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  .glass {
+    background: rgba(20, 23, 30, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px) saturate(1.1);
+    -webkit-backdrop-filter: blur(16px) saturate(1.1);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+      0 16px 40px -28px rgba(0, 0, 0, 0.8);
+  }
+
+  .card {
+    @apply relative rounded-3xl glass overflow-hidden;
+  }
+  .card-hover {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .panel {
+    @apply card;
+  }
+
+  .label {
+    @apply text-[10.5px] uppercase tracking-[0.2em] text-faint font-semibold;
+  }
+  .num {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold
+      transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn text-white font-semibold;
+    background: var(--accent);
+    box-shadow: 0 10px 26px -14px rgb(var(--accent-rgb) / 0.9);
+  }
+  .btn-primary:hover {
+    background: var(--accent-light);
+  }
+  .btn-ghost {
+    @apply btn text-ink border;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .input {
+    @apply w-full rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-faint outline-none transition;
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .input:focus {
+    border-color: rgb(var(--accent-rgb) / 0.6);
+    box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.12);
+  }
+
+  .hair {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Depth system. The old .card is one flat fill at one elevation,
+     so every panel weighed the same and the eye had nowhere to land.
+     These read as material lit from above, at three heights.
+     ───────────────────────────────────────────────────────────── */
+  .surface {
+    @apply relative rounded-3xl overflow-hidden;
+    background: linear-gradient(180deg, #171b24 0%, #12151c 100%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 1px 2px 0 rgba(0, 0, 0, 0.5),
+      0 12px 32px -20px rgba(0, 0, 0, 0.9);
+  }
+  /* Sits *into* the page rather than on top of it — for inputs and wells. */
+  .sunken {
+    @apply relative rounded-2xl;
+    background: rgba(0, 0, 0, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 2px 6px -2px rgba(0, 0, 0, 0.7);
+  }
+  /* The top-edge highlight that sells "lit from above". */
+  .lit::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 22%);
+  }
+
+  /* Money and rank are the emotional payload of a sales floor —
+     they get display size, not caption size. */
+  .figure {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    line-height: 0.85;
+  }
+  .eyebrow {
+    @apply text-[10px] uppercase tracking-[0.28em] text-faint font-bold;
+  }
+}
+
+/* Motion is meaningful here (rank changes, money landing), so it's on by
+   default — but never at the cost of someone who asked for it off. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+
+  /* Kept for compatibility; now a calm near-white heading tint. */
+  .plasma-text {
+    background: linear-gradient(100deg, #ffffff, var(--accent-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .gborder::before {
+    content: none;
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #262c38 transparent;
+}
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #232833;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #313846;
+  background-clip: content-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Print / Save as PDF: the dashboard on white paper, no chrome or filter bars. */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+  body > div.fixed,
+  header,
+  button,
+  [aria-expanded] {
+    display: none !important;
+  }
+  .surface,
+  .sunken {
+    background: #fff !important;
+    border-color: #ddd !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+  .lit::after {
+    display: none;
+  }
+  .text-ink,
+  .text-muted,
+  .text-faint,
+  .eyebrow,
+  .label {
+    color: #333 !important;
+  }
+  [style*="max-height"] {
+    max-height: none !important;
+  }
+  section {
+    break-inside: auto;
+  }
+}

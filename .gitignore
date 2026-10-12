@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+prisma/*.db
+prisma/*.db-journal
+shots/
+tsconfig.tsbuildinfo
+# Real student names + amounts: never in git. Loaded onto live via the API instead.
+prisma/load-students.ts

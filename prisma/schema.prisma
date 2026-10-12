@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// One person on the sales team. They log in with their own `code`.
+model Member {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?
+  /// admin | closer | dm_setter | phone_setter
+  role      String
+  code      String   @unique
+  /// This setter's tracking code in booking links (e.g. "ig-dm-dvd"). A booking
+  /// whose utm_source matches is credited to them automatically.
+  utmCode   String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  setCalls       BookedCall[] @relation("setter")
+  closedCalls    BookedCall[] @relation("closer")
+  setPayments    Payment[]    @relation("paySetter")
+  closedPayments Payment[]    @relation("payCloser")
+  reports        Report[]
+}
+
+/// Someone who filled in the application form (Typeform). Matched to a
+/// booked call by email; unmatched ones are the setters' chase list.
+model Application {
+  id           String    @id @default(cuid())
+  externalId   String?   @unique
+  name         String
+  email        String?
+  phone        String?
+  instagram    String?
+  utmSource    String?
+  /// JSON object: question label → answer, in form order
+  answers      String    @default("{}")
+  /// Auto-flagged from the budget answer (see DQ_BUDGET_PATTERNS in config)
+  lowBudget    Boolean   @default(false)
+  appliedAt    DateTime  @default(now())
+  /// Chase-list state: open | contacted | not_interested
+  chaseStatus  String    @default("open")
+  chaseNotes   String?
+  chasedAt     DateTime?
+  chasedById   String?
+  createdAt    DateTime  @default(now())
+
+  @@index([appliedAt])
+  @@index([email])
+}
+
+/// A call on the calendar. Created when a lead books (manually or via the
+/// ingest webhook); the closer fills in the outcome with the Sales Call Report.
+model BookedCall {
+  id           String    @id @default(cuid())
+  externalId   String?   @unique
+  leadName     String
+  leadEmail    String?
+  leadPhone    String?
+  instagram    String?
+  leadTimezone String?
+  calendarName String?
+  program      String?
+  dateBooked   DateTime  @default(now())
+  dateOfCall   DateTime
+  utmSource    String?
+  utmCampaign  String?
+  utmMedium    String?
+  utmContent   String?
+  /// JSON object of the booking questions (e.g. Calendly), label → answer
+  bookingAnswers String  @default("{}")
+  setterId     String?
+  setter       Member?   @relation("setter", fields: [setterId], references: [id], onDelete: SetNull)
+  closerId     String?
+  closer       Member?   @relation("closer", fields: [closerId], references: [id], onDelete: SetNull)
+
+  // ---- setter → closer handoff (pre-call form) ----
+  /// JSON object of the handoff answers (see PRECALL_FORM)
+  handoff      String?
+  handoffById  String?
+  handoffAt    DateTime?
+
+  // ---- filled by the Sales Call Report ----
+  /// closed | not_closed | follow_up | no_show | cancelled | rescheduled  (null = not reported yet)
+  outcome      String?
+  /// first_call | follow_up_call
+  callType     String?
+  /// qualified | dq
+  qualified    String?
+  /// 1–10
+  callRating   Int?
+  recordingUrl String?
+  /// Total contract value of the deal (revenue)
+  revenue      Float     @default(0)
+  /// Cash collected on the call itself
+  cashOnCall   Float     @default(0)
+  /// pif | split | deposit
+  paymentType  String?
+  paymentMethod String?
+  /// Paid in full (kept in step with paymentType = pif)
+  pif          Boolean   @default(false)
+  nextPaymentAmount Float?
+  nextPaymentDate   String?
+  paymentPlanDetails String?
+  notes        String?
+  reportedAt   DateTime?
+  reportedById String?
+
+  createdAt    DateTime  @default(now())
+
+  @@index([dateOfCall])
+  @@index([leadEmail])
+}
+
+/// Money movement from the payment processor. Every instalment is its own
+/// row; failed attempts are kept (status = failed) but never count as cash.
+model Payment {
+  id            String   @id @default(cuid())
+  externalId    String?  @unique
+  customerName  String
+  customerEmail String?
+  date          DateTime
+  amount        Float
+  /// pif | split | deposit
+  paymentType   String
+  /// True when the type was guessed (no report yet); a closer's report corrects it.
+  typeAuto      Boolean  @default(false)
+  /// succeeded | failed
+  status        String   @default("succeeded")
+  failureReason String?
+  product       String?
+  paymentMethod String?
+  program       String?
+  notes         String?
+  setterId      String?
+  setter        Member?  @relation("paySetter", fields: [setterId], references: [id], onDelete: SetNull)
+  closerId      String?
+  closer        Member?  @relation("payCloser", fields: [closerId], references: [id], onDelete: SetNull)
+  createdAt     DateTime @default(now())
+
+  @@index([date])
+}
+
+/// Every form submission (EODs, feedback, onboarding). The questions are
+/// defined in src/lib/forms.ts; answers are stored as JSON in `data`.
+/// Client onboarding is filled in by the client, so it has no member.
+model Report {
+  id        String   @id @default(cuid())
+  /// dm_eod | sdr_eod | closer_eod | feedback | onboarding
+  kind      String
+  memberId  String?
+  member    Member?  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  /// The UK calendar day the report is for, YYYY-MM-DD
+  day       String
+  data      String
+  createdAt DateTime @default(now())
+
+  @@index([kind, day])
+}
+
+/// A student on a payment plan with Echelon. Real data, entered by the admin:
+/// db:seed and db:clear never touch this table. Amounts are GBP.
+model Student {
+  id          String   @id @default(cuid())
+  name        String
+  /// Cash already received
+  paid        Float    @default(0)
+  /// Still owed on the plan (excludes the placement fee)
+  owed        Float    @default(0)
+  /// Fee due once they're placed in a role
+  onPlacement Float    @default(0)
+  /// When the owed amount is due, YYYY-MM-DD (null = not set yet)
+  dueDate     String?
+  /// active | pending | settled
+  status      String   @default("active")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
