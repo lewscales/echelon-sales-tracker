@@ -3,15 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { fmtDay, fmtDayLong } from "@/lib/dates";
 
-// Categorical slots, dark mode — validated against the panel surface (#14171E):
+// Categorical slots, dark mode — validated against the old charcoal panel (#14171E); still clears on navy #0C1530:
 // every adjacent pair clears CVD ΔE 8 and normal-vision ΔE 15, all ≥ 3:1.
 // Entities get a slot by a stable order (never by rank), and anything past the
 // sixth folds into a grey "Other".
 export const SERIES = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#9085e9"];
 export const OTHER = "#6b7280";
-const ACCENT = "var(--accent-light)";
+const ACCENT = "var(--accent)";
 const GRID = "rgba(255,255,255,0.06)";
-const AXIS_TEXT = "#606775";
+const AXIS_TEXT = "#6F7B9C";
 
 function useWidth<T extends HTMLElement>() {
   const ref = useRef<T>(null);
@@ -121,7 +121,7 @@ export function LineChart({
           {hover != null && (
             <g>
               <line x1={x(hover)} x2={x(hover)} y1={PAD.top - 4} y2={PAD.top + ih} stroke="rgba(255,255,255,0.18)" strokeDasharray="3 3" />
-              <circle cx={x(hover)} cy={y(data[hover].value)} r={5} fill={ACCENT} stroke="#14171E" strokeWidth={2} />
+              <circle cx={x(hover)} cy={y(data[hover].value)} r={5} fill={ACCENT} stroke="#0C1530" strokeWidth={2} />
             </g>
           )}
           <rect
@@ -276,7 +276,7 @@ export function Donut({ data, label, noun }: { data: Slice[]; label: string; nou
               d={a.path}
               fill={a.color}
               fillRule="evenodd"
-              stroke="#14171E"
+              stroke="#0C1530"
               strokeWidth={2}
               opacity={hover == null || hover === a.key ? 1 : 0.35}
               onMouseEnter={() => setHover(a.key)}

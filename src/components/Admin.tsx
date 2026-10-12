@@ -16,7 +16,7 @@ export function Admin({ ctx }: { ctx: Ctx }) {
     <div className="space-y-6">
       <div>
         <div className="eyebrow">Admin</div>
-        <h1 className="display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">Run the floor</h1>
+        <h1 className="display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">Run the floor</h1>
       </div>
       <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
         {(
@@ -118,7 +118,7 @@ function Team({ ctx }: { ctx: Ctx }) {
   }
 
   return (
-    <section className="surface lit p-4 sm:p-6 space-y-4">
+    <section className="surface p-4 sm:p-6 space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="display text-xl font-bold">Team &amp; logins</h2>
@@ -289,7 +289,7 @@ function Calls({ ctx }: { ctx: Ctx }) {
   const closers = data.members.filter((m) => m.active && (m.role === "closer" || m.role === "admin")).map((m) => ({ value: m.id, label: m.name }));
 
   return (
-    <section className="surface lit p-4 sm:p-6 space-y-4">
+    <section className="surface p-4 sm:p-6 space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="display text-xl font-bold">Booked calls</h2>
@@ -420,7 +420,7 @@ function Payments({ ctx }: { ctx: Ctx }) {
   const closers = data.members.filter((m) => m.active && (m.role === "closer" || m.role === "admin")).map((m) => ({ value: m.id, label: m.name }));
 
   return (
-    <section className="surface lit p-4 sm:p-6 space-y-4">
+    <section className="surface p-4 sm:p-6 space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="display text-xl font-bold">Payments</h2>
@@ -447,7 +447,7 @@ function Payments({ ctx }: { ctx: Ctx }) {
           { key: "date", label: "Date", render: (p) => fmtDay(dayOf(p.date)) },
           { key: "name", label: "Customer", render: (p) => <span className="font-semibold">{p.customerName}</span> },
           { key: "email", label: "Email", render: (p) => <span className="text-muted">{p.customerEmail ?? "–"}</span> },
-          { key: "amt", label: "Amount", align: "right", render: (p) => <span className="text-gold">{fmtMoney(p.amount, true)}</span> },
+          { key: "amt", label: "Amount", align: "right", render: (p) => <span className="text-white">{fmtMoney(p.amount, true)}</span> },
           { key: "type", label: "Type", render: (p) => PAYMENT_TYPES[p.paymentType as keyof typeof PAYMENT_TYPES] ?? p.paymentType },
           { key: "status", label: "Status", render: (p) => (p.status === "failed" ? <Pill tone="bad">Failed</Pill> : <Pill tone="good">Paid</Pill>) },
           { key: "product", label: "Product", render: (p) => p.product ?? "–" },
@@ -719,7 +719,7 @@ function Connect({ ctx }: { ctx: Ctx }) {
   const slack = data.slack;
   return (
     <div className="space-y-6">
-      <section className="surface lit p-4 sm:p-6 space-y-4">
+      <section className="surface p-4 sm:p-6 space-y-4">
         <div>
           <h2 className="display text-xl font-bold">Zapier: 4 Zaps bring outside data in</h2>
           <p className="text-sm text-muted mt-1 max-w-3xl">
@@ -741,7 +741,7 @@ function Connect({ ctx }: { ctx: Ctx }) {
         ))}
       </section>
 
-      <section className="surface lit p-4 sm:p-6 space-y-4">
+      <section className="surface p-4 sm:p-6 space-y-4">
         <div>
           <h2 className="display text-xl font-bold">Slack channels</h2>
           <p className="text-sm text-muted mt-1 max-w-3xl">
@@ -761,7 +761,7 @@ function Connect({ ctx }: { ctx: Ctx }) {
         </div>
       </section>
 
-      <section className="surface lit p-4 sm:p-6 space-y-3">
+      <section className="surface p-4 sm:p-6 space-y-3">
         <h2 className="display text-xl font-bold">Scheduled reminders</h2>
         <p className="text-sm text-muted max-w-3xl">
           Set <code className="num text-cyan">CRON_SECRET</code> (16+ random characters) in the server settings, then have a scheduler (a Render Cron Job

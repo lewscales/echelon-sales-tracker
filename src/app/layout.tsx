@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Manrope, JetBrains_Mono } from "next/font/google";
+import { Inter, Inter_Tight } from "next/font/google";
 import "./globals.css";
 import { BRAND, themeCssVars } from "@/lib/config";
 
-const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-display", display: "swap" });
-const sans = Manrope({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+const display = Inter_Tight({ subsets: ["latin"], variable: "--font-display", display: "swap" });
+const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 
 export const metadata: Metadata = {
   title: BRAND.name,
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0C0E12",
+  themeColor: "#060B1A",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -24,19 +23,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={`${display.variable} ${sans.variable}`}
       style={themeCssVars() as React.CSSProperties}
     >
       <body className="font-sans antialiased min-h-screen">
-        {/* Static ambient wash, same as Echelon. */}
+        {/* One quiet light source at the top; the page itself is flat navy. */}
         <div
           className="fixed inset-0 z-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(70rem 44rem at 15% -12%, rgb(var(--accent-rgb) / 0.10), transparent 60%)," +
-              "radial-gradient(60rem 44rem at 100% 0%, rgb(var(--accent-rgb) / 0.06), transparent 55%)," +
-              "#0C0E12",
-          }}
+          style={{ background: "radial-gradient(80rem 36rem at 50% -14rem, rgb(var(--accent-rgb) / 0.10), transparent 70%), #060B1A" }}
         />
         <div className="relative z-10">{children}</div>
       </body>

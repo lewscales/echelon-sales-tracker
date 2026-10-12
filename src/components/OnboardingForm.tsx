@@ -41,19 +41,19 @@ export function OnboardingForm() {
           <span className="text-cyan">
             <Logo size={36} />
           </span>
-          <div className="display font-extrabold text-lg">{BRAND.client}</div>
+          <div className="display font-semibold text-lg">{BRAND.client}</div>
         </div>
         {done ? (
-          <div className="surface lit p-8 text-center space-y-3">
+          <div className="surface p-8 text-center space-y-3">
             <div className="text-4xl">🎉</div>
-            <h1 className="display text-3xl font-extrabold">You&apos;re all set</h1>
+            <h1 className="display text-3xl font-semibold">You&apos;re all set</h1>
             <p className="text-muted">Thanks for filling this in. The team has it and will be in touch with your next steps.</p>
           </div>
         ) : (
           <>
-            <h1 className="display text-4xl font-extrabold tracking-tight">{form.title}</h1>
+            <h1 className="display text-4xl font-semibold tracking-tight">{form.title}</h1>
             <p className="text-muted mt-2 mb-6">{form.blurb}</p>
-            <form onSubmit={submit} className="surface lit p-5 sm:p-6 space-y-5" noValidate>
+            <form onSubmit={submit} className="surface p-5 sm:p-6 space-y-5" noValidate>
               <FieldList fields={form.fields} values={values} set={(k, v) => setValues((s) => ({ ...s, [k]: v }))} />
               <input
                 type="text"

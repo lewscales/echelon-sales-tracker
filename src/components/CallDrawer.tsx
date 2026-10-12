@@ -154,7 +154,7 @@ function Grid({ items }: { items: [string, string | null][] }) {
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
       {items.map(([k, v]) => (
         <div key={k} className="sunken px-3 py-2 min-w-0">
-          <div className="text-[10px] uppercase tracking-[0.16em] text-faint font-bold truncate">{k}</div>
+          <div className="eyebrow truncate">{k}</div>
           <div className="text-sm truncate" title={v ?? undefined}>
             {v || "–"}
           </div>

@@ -31,7 +31,7 @@ export function Applications({ ctx }: { ctx: Ctx }) {
     <div className="space-y-6">
       <div>
         <div className="eyebrow">Applications</div>
-        <h1 className="display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">Who applied, who booked, who to chase</h1>
+        <h1 className="display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">Who applied, who booked, who to chase</h1>
       </div>
 
       <Section
@@ -157,7 +157,7 @@ function ApplicationModal({ ctx, app, bookedCallId, onClose }: { ctx: Ctx; app: 
             ["Instagram", app.instagram],
           ].map(([k, v]) => (
             <div key={k} className="sunken px-3 py-2 min-w-0">
-              <div className="text-[10px] uppercase tracking-[0.16em] text-faint font-bold">{k}</div>
+              <div className="eyebrow">{k}</div>
               <div className="text-sm truncate">{v || "–"}</div>
             </div>
           ))}

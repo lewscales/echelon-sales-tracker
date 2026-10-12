@@ -11,14 +11,14 @@ export const BRAND = {
   short: "Sales Tracker",
   /** Whose floor this is — shows under the logo. */
   client: "Echelon",
-  tagline: "Every call, every pound, every rep. One screen.",
+  tagline: "Sign in with your access code.",
   description: "Sales team tracker: cash, call outcomes, setter activity and daily reports.",
 };
 
 export const THEME = {
-  accent: "#1FB5C9",
-  accentLight: "#5ED3E0",
-  accentDeep: "#13879A",
+  accent: "#3B6BFF",
+  accentLight: "#7C9BFF",
+  accentDeep: "#1E3A8A",
 };
 
 /** Options offered in dropdowns. Change freely — old records keep their value. */

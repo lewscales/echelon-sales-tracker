@@ -47,10 +47,10 @@ export function Dashboard({ ctx }: { ctx: Ctx }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="eyebrow">Team dashboard</div>
-          <h1 className="display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
-            Hey {ctx.data.me.name.split(" ")[0]}, here&apos;s the floor.
-          </h1>
+          <div className="text-sm text-muted">
+            {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
+          </div>
+          <h1 className="display text-3xl sm:text-[34px] font-semibold mt-1">Dashboard</h1>
         </div>
         <div className="flex flex-wrap gap-1.5">
           {[
@@ -116,7 +116,7 @@ function CashSection({ ctx }: { ctx: Ctx }) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="col-span-2 sunken px-5 py-4 relative overflow-hidden">
           <div className="eyebrow">Cash collected</div>
-          <div className="figure text-gold text-5xl sm:text-6xl mt-3">{fmtMoney(s.total)}</div>
+          <div className="figure text-white text-5xl sm:text-6xl mt-3">{fmtMoney(s.total)}</div>
           <div className="text-faint text-xs mt-2">
             {fmtNum(s.count)} payment{s.count === 1 ? "" : "s"}
           </div>
@@ -156,7 +156,7 @@ function CashSection({ ctx }: { ctx: Ctx }) {
           { key: "date", label: "Date", render: (p) => fmtDay(dayOf(p.date)) },
           { key: "name", label: "Customer", render: (p) => <span className="font-semibold">{p.customerName}</span> },
           ...(showEmail ? [{ key: "email", label: "Email", render: (p: PaymentRow) => <span className="text-muted">{p.customerEmail ?? "–"}</span> }] : []),
-          { key: "amount", label: "Amount", align: "right", render: (p) => <span className="text-gold font-semibold">{fmtMoney(p.amount, true)}</span> },
+          { key: "amount", label: "Amount", align: "right", render: (p) => <span className="text-white font-semibold">{fmtMoney(p.amount, true)}</span> },
           {
             key: "type",
             label: "Type",
@@ -279,7 +279,7 @@ function SalesSection({ ctx }: { ctx: Ctx }) {
           { key: "outcome", label: "Outcome", render: (c) => <OutcomePill outcome={c.outcome} /> },
           { key: "type", label: "Call type", render: (c) => (c.callType ? CALL_TYPES[c.callType as keyof typeof CALL_TYPES] : "–") },
           { key: "rev", label: "Revenue", align: "right", render: (c) => (c.revenue ? fmtMoney(c.revenue) : "–") },
-          { key: "cash", label: "Cash", align: "right", render: (c) => (c.cashOnCall ? <span className="text-gold">{fmtMoney(c.cashOnCall)}</span> : "–") },
+          { key: "cash", label: "Cash", align: "right", render: (c) => (c.cashOnCall ? <span className="text-white">{fmtMoney(c.cashOnCall)}</span> : "–") },
           { key: "ptype", label: "Payment", render: (c) => (c.paymentType ? <Pill tone={c.pif ? "good" : "plain"}>{PAYMENT_TYPES[c.paymentType as keyof typeof PAYMENT_TYPES] ?? c.paymentType}</Pill> : "") },
           { key: "q", label: "Qualified", render: (c) => (c.qualified ? <Pill tone={c.qualified === "dq" ? "bad" : "plain"}>{QUALIFIED[c.qualified as keyof typeof QUALIFIED]}</Pill> : "–") },
           { key: "rating", label: "Rating", align: "right", render: (c) => (c.callRating ? `${c.callRating}/10` : "–") },
@@ -489,7 +489,7 @@ function MoneyWatch({ ctx, failed }: { ctx: Ctx; failed: (PaymentRow & { recover
                   <span className={`num w-16 shrink-0 ${u.overdue ? "text-danger font-semibold" : "text-muted"}`}>{fmtDay(u.due)}</span>
                   <span className="font-semibold truncate">{u.call.leadName}</span>
                   <span className="text-faint text-xs truncate hidden sm:inline">{nameOf(u.call.closerId)}</span>
-                  <span className="ml-auto num text-gold">{fmtMoney(u.amount)}</span>
+                  <span className="ml-auto num text-white">{fmtMoney(u.amount)}</span>
                   {u.overdue && <Pill tone="bad">Overdue</Pill>}
                 </button>
               </li>

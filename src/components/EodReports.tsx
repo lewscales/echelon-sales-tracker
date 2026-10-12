@@ -22,7 +22,7 @@ export function Answer({ field, value, full = false }: { field: Field; value: st
     case "yesno":
       return <Pill tone={value === YES ? "good" : "bad"}>{value === YES ? "Yes" : "No"}</Pill>;
     case "money":
-      return <span className="num text-gold">{fmtMoney(Number(value), true)}</span>;
+      return <span className="num text-white">{fmtMoney(Number(value), true)}</span>;
     case "number":
       return <span className="num">{fmtNum(Number(value), 2)}</span>;
     case "date":
@@ -86,7 +86,7 @@ export function EodReports({ ctx }: { ctx: Ctx }) {
     <div className="space-y-6">
       <div>
         <div className="eyebrow">{admin ? "Every report the team has filed" : "Your reports"}</div>
-        <h1 className="display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">End-of-day reports</h1>
+        <h1 className="display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">End-of-day reports</h1>
       </div>
 
       <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
@@ -107,7 +107,7 @@ export function EodReports({ ctx }: { ctx: Ctx }) {
         ))}
       </div>
 
-      <section className="surface lit p-4 sm:p-6 space-y-4">
+      <section className="surface p-4 sm:p-6 space-y-4">
         <div className="flex flex-wrap gap-2">
           <DateFilter label="Report date" value={range} onChange={setRange} />
           {admin && !form.public && <MultiFilter label="Name" options={people} value={member} onChange={setMember} />}

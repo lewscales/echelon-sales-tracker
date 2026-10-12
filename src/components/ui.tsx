@@ -35,15 +35,16 @@ export function fmtNum(n: number | null | undefined, decimals = 0): string {
 
 // ─────────────────────────────── Brand mark ───────────────────────────────
 
-/** Three rising bars in a rounded frame: currentColor, so it tints anywhere. */
+/** The Echelon mark: white rising bars on a royal-blue tile (same as the Echelon app icon). */
 export function Logo({ size = 32 }: { size?: number }) {
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} fill="none" aria-hidden>
-      <rect x="10" y="10" width="80" height="80" rx="22" fill="currentColor" opacity="0.14" />
-      <rect x="10" y="10" width="80" height="80" rx="22" stroke="currentColor" strokeWidth="6" />
-      <rect x="28" y="54" width="11" height="20" rx="4" fill="currentColor" />
-      <rect x="44.5" y="42" width="11" height="32" rx="4" fill="currentColor" />
-      <rect x="61" y="28" width="11" height="46" rx="4" fill="currentColor" />
+      <rect width="100" height="100" rx="24" fill="var(--accent)" />
+      <rect x="27" y="27" width="46" height="46" rx="12" stroke="#fff" strokeWidth="4.5" />
+      <rect x="38.5" y="50" width="7" height="11" rx="2.5" fill="#fff" />
+      <rect x="47" y="43" width="7" height="18" rx="2.5" fill="#fff" />
+      <rect x="55.5" y="35" width="7" height="26" rx="2.5" fill="#fff" />
+      <path d="M34 62.5c10 6 22 6 32 0" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
     </svg>
   );
 }
@@ -64,9 +65,9 @@ export function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="surface lit p-4 sm:p-6 scroll-mt-28">
+    <section id={id} className="surface p-4 sm:p-6 scroll-mt-28">
       <div className="mb-4">
-        <h2 className="display text-2xl sm:text-[28px] font-extrabold tracking-tight">{title}</h2>
+        <h2 className="display text-xl sm:text-2xl font-semibold">{title}</h2>
         {blurb && <p className="text-muted text-sm mt-1">{blurb}</p>}
       </div>
       {filters && <div className="flex flex-wrap gap-2 mb-5">{filters}</div>}
@@ -88,11 +89,11 @@ export function Stat({
   tone?: "money" | "good" | "bad";
   big?: boolean;
 }) {
-  const color = tone === "money" ? "text-gold" : tone === "good" ? "text-mint" : tone === "bad" ? "text-danger" : "text-ink";
+  const color = tone === "money" ? "text-white" : tone === "good" ? "text-mint" : tone === "bad" ? "text-danger" : "text-ink";
   return (
     <div className="sunken px-4 py-3.5 min-w-0">
       <div className="eyebrow truncate" title={label}>{label}</div>
-      <div className={`num font-bold mt-2 ${big ? "text-3xl sm:text-4xl" : "text-xl sm:text-2xl"} ${color} truncate`}>{value}</div>
+      <div className={`num font-semibold mt-2 ${big ? "text-3xl sm:text-4xl" : "text-xl sm:text-2xl"} ${color} truncate`}>{value}</div>
       {sub && <div className="text-faint text-xs mt-1 truncate">{sub}</div>}
     </div>
   );
@@ -333,7 +334,7 @@ export function Table<T>({
     <div className="sunken overflow-hidden">
       <div className="overflow-auto" style={{ maxHeight }}>
         <table className="w-full text-sm border-collapse">
-          <thead className="sticky top-0 z-10 bg-[#101318]">
+          <thead className="sticky top-0 z-10 bg-surface2">
             <tr>
               <th className="w-10 px-3 py-2.5 text-left eyebrow !text-[9.5px]">#</th>
               {columns.map((c) => (

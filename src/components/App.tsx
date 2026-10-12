@@ -107,22 +107,22 @@ export function App() {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-30 border-b hair bg-[#0C0E12]/85 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b hair bg-bg/90 backdrop-blur">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
           <div className="flex items-center gap-3 h-16">
-            <span className="text-cyan shrink-0">
-              <Logo size={32} />
+            <span className="shrink-0">
+              <Logo size={30} />
             </span>
             <div className="min-w-0">
-              <div className="display font-extrabold leading-tight truncate">{BRAND.name}</div>
+              <div className="display font-semibold text-[15px] leading-tight truncate">{BRAND.name}</div>
             </div>
             <nav className="hidden md:flex items-center gap-1 ml-8" aria-label="Main">
               {visible.map((t) => (
                 <a
                   key={t.id}
                   href={`#${t.id}`}
-                  className={`rounded-xl px-3.5 py-2 text-sm font-semibold transition-colors ${
-                    current === t.id ? "bg-white/[0.08] text-ink" : "text-muted hover:text-ink"
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    current === t.id ? "bg-surface2 text-ink" : "text-muted hover:text-ink"
                   }`}
                 >
                   {t.label}

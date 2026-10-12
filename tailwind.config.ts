@@ -10,17 +10,17 @@ const config: Config = {
         xs: "420px",
       },
       colors: {
-        // "Quiet Money" — soft charcoal, one royal-blue accent, gold=money, green=winning
-        bg: "#0C0E12",
-        bg2: "#0E1116",
-        surface: "#14171E",
-        surface2: "#191D26",
-        elevated: "#1F242F",
-        line: "#252A34",
-        line2: "#333A47",
-        ink: "#ECEFF4",
-        muted: "#98A0AE",
-        faint: "#606775",
+        // Echelon: deep navy, white type, one royal-blue accent. Green/red/amber are status only.
+        bg: "#060B1A",
+        bg2: "#08102A",
+        surface: "#0C1530",
+        surface2: "#101B3A",
+        elevated: "#152247",
+        line: "#1A2750",
+        line2: "#25365F",
+        ink: "#F5F7FC",
+        muted: "#A4AFCB",
+        faint: "#6F7B9C",
         // brand family — driven by the accent CSS vars (see src/lib/config.ts)
         brand: "rgb(var(--accent-rgb) / <alpha-value>)",
         brandDeep: "rgb(var(--accent-deep-rgb) / <alpha-value>)",
@@ -30,7 +30,7 @@ const config: Config = {
         accent: "rgb(var(--accent-rgb) / <alpha-value>)",
         accentDim: "rgb(var(--accent-deep-rgb) / <alpha-value>)",
         // semantics
-        gold: "#E9B44C",
+        gold: "#F2B84B",
         mint: "#46D08A",
         positive: "#46D08A",
         positiveDim: "#1c6b45",
@@ -42,10 +42,9 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-display)", "system-ui", "sans-serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       borderRadius: {
-        "4xl": "28px",
+        "4xl": "20px",
       },
       keyframes: {
         marquee: {

@@ -90,7 +90,7 @@ export function Students({ ctx }: { ctx: Ctx }) {
           <div className="sunken overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse min-w-[980px]">
-                <thead className="bg-[#101318]">
+                <thead className="bg-surface2">
                   <tr>
                     {["Student", "Paid", "Owes", "On placement", "Due date", "Status", "Notes", ""].map((h, i) => (
                       <th key={i} className={`px-3 py-2.5 eyebrow !text-[9.5px] whitespace-nowrap ${i >= 1 && i <= 3 ? "text-right" : "text-left"}`}>
@@ -150,7 +150,7 @@ function Row({ r, now, save, onPay, onDelete }: { r: Student; now: string; save:
         <MoneyCell value={r.paid} onSave={(n) => save(r.id, { paid: n })} tone="text-mint" />
       </td>
       <td className="px-3 py-2 w-[110px]">
-        <MoneyCell value={r.owed} onSave={(n) => save(r.id, { owed: n })} tone="text-gold" />
+        <MoneyCell value={r.owed} onSave={(n) => save(r.id, { owed: n })} tone="text-white font-semibold" />
       </td>
       <td className="px-3 py-2 w-[120px]">
         <MoneyCell value={r.onPlacement} onSave={(n) => save(r.id, { onPlacement: n })} />
@@ -158,12 +158,12 @@ function Row({ r, now, save, onPay, onDelete }: { r: Student; now: string; save:
       <td className="px-3 py-2 w-[170px]">
         <DateCell
           label={`Due date for ${r.name}`}
-          className={late ? "!border-danger/60 text-danger" : needsDate ? "!border-gold/50" : ""}
+          className={late ? "!border-danger/60 text-danger" : needsDate ? "!border-warn/50" : ""}
           value={r.dueDate}
           onSave={(d) => save(r.id, { dueDate: d })}
         />
         {late && <div className="text-[11px] text-danger mt-1">Overdue since {fmtDay(r.dueDate!)}</div>}
-        {needsDate && <div className="text-[11px] text-gold mt-1">Set a date</div>}
+        {needsDate && <div className="text-[11px] text-warn mt-1">Set a date</div>}
       </td>
       <td className="px-3 py-2 w-[120px]">
         <select
@@ -328,7 +328,7 @@ function LogPayment({ s, onClose, onDone }: { s: Student; onClose: () => void; o
         className="space-y-4"
       >
         <p className="text-muted text-sm">
-          Owes <span className="text-gold font-semibold">{fmt(s.owed)}</span>. The amount moves from &ldquo;Owes&rdquo; to &ldquo;Paid&rdquo;.
+          Owes <span className="text-white font-semibold">{fmt(s.owed)}</span>. The amount moves from &ldquo;Owes&rdquo; to &ldquo;Paid&rdquo;.
         </p>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-faint">£</span>

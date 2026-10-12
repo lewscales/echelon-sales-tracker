@@ -15,8 +15,8 @@
 
 html,
 body {
-  background: #0c0e12;
-  color: #eceff4;
+  background: #060b1a;
+  color: #f5f7fc;
 }
 
 body {
@@ -29,28 +29,22 @@ body {
 @layer components {
   .display {
     font-family: var(--font-display), system-ui, sans-serif;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.025em;
   }
 
   .glass {
-    background: rgba(20, 23, 30, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(16px) saturate(1.1);
-    -webkit-backdrop-filter: blur(16px) saturate(1.1);
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
-      0 16px 40px -28px rgba(0, 0, 0, 0.8);
+    background: #0c1530;
+    border: 1px solid #1a2750;
   }
 
   .card {
-    @apply relative rounded-3xl glass overflow-hidden;
+    @apply relative rounded-2xl glass overflow-hidden;
   }
   .card-hover {
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s;
   }
   .card-hover:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: #25365f;
   }
 
   .panel {
@@ -58,47 +52,45 @@ body {
   }
 
   .label {
-    @apply text-[10.5px] uppercase tracking-[0.2em] text-faint font-semibold;
+    @apply text-xs text-muted font-medium;
   }
   .num {
-    font-family: var(--font-mono), ui-monospace, monospace;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold
-      transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold
+      transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-primary {
     @apply btn text-white font-semibold;
     background: var(--accent);
-    box-shadow: 0 10px 26px -14px rgb(var(--accent-rgb) / 0.9);
   }
   .btn-primary:hover {
-    background: var(--accent-light);
+    background: #2f5cf0;
   }
   .btn-ghost {
     @apply btn text-ink border;
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: transparent;
+    border-color: #25365f;
   }
   .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: #101b3a;
   }
 
   .input {
-    @apply w-full rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-faint outline-none transition;
-    background: rgba(0, 0, 0, 0.28);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    @apply w-full rounded-lg px-3.5 py-2.5 text-sm text-ink placeholder:text-faint outline-none transition;
+    background: #08102a;
+    border: 1px solid #25365f;
   }
   .input:focus {
-    border-color: rgb(var(--accent-rgb) / 0.6);
-    box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.18);
   }
 
   .hair {
-    border-color: rgba(255, 255, 255, 0.06);
+    border-color: #1a2750;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -107,20 +99,15 @@ body {
      These read as material lit from above, at three heights.
      ───────────────────────────────────────────────────────────── */
   .surface {
-    @apply relative rounded-3xl overflow-hidden;
-    background: linear-gradient(180deg, #171b24 0%, #12151c 100%);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
-      0 1px 2px 0 rgba(0, 0, 0, 0.5),
-      0 12px 32px -20px rgba(0, 0, 0, 0.9);
+    @apply relative rounded-2xl overflow-hidden;
+    background: #0c1530;
+    border: 1px solid #1a2750;
   }
   /* Sits *into* the page rather than on top of it — for inputs and wells. */
   .sunken {
-    @apply relative rounded-2xl;
-    background: rgba(0, 0, 0, 0.32);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: inset 0 2px 6px -2px rgba(0, 0, 0, 0.7);
+    @apply relative rounded-xl;
+    background: #08102a;
+    border: 1px solid #1a2750;
   }
   /* The top-edge highlight that sells "lit from above". */
   .lit::after {
@@ -128,20 +115,20 @@ body {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 22%);
+    background: none;
   }
 
   /* Money and rank are the emotional payload of a sales floor —
      they get display size, not caption size. */
   .figure {
-    font-family: var(--font-mono), ui-monospace, monospace;
+    font-family: var(--font-display), system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.045em;
-    font-weight: 800;
-    line-height: 0.85;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+    line-height: 1;
   }
   .eyebrow {
-    @apply text-[10px] uppercase tracking-[0.28em] text-faint font-bold;
+    @apply text-[11px] uppercase tracking-[0.08em] text-muted font-semibold;
   }
 }
 
@@ -161,10 +148,7 @@ body {
 
   /* Kept for compatibility; now a calm near-white heading tint. */
   .plasma-text {
-    background: linear-gradient(100deg, #ffffff, var(--accent-light));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: #ffffff;
   }
   .gborder::before {
     content: none;
@@ -173,20 +157,20 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #262c38 transparent;
+  scrollbar-color: #25365f transparent;
 }
 *::-webkit-scrollbar {
   width: 9px;
   height: 9px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #232833;
+  background: #1f2e57;
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: #313846;
+  background: #2c3f6e;
   background-clip: content-box;
 }
 

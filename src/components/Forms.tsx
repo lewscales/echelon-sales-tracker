@@ -60,7 +60,7 @@ export function Forms({ ctx }: { ctx: Ctx }) {
     <div className="space-y-6">
       <div>
         <div className="eyebrow">Forms</div>
-        <h1 className="display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">What are you filling in?</h1>
+        <h1 className="display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">What are you filling in?</h1>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {canReport && (
@@ -93,7 +93,7 @@ export function Forms({ ctx }: { ctx: Ctx }) {
         ))}
       </div>
       {role === "admin" && (
-        <div className="surface lit p-5 space-y-2">
+        <div className="surface p-5 space-y-2">
           <div className="eyebrow">Client onboarding form (public link)</div>
           <p className="text-sm text-muted">New clients fill this in themselves, with no login. Send them this link after they pay:</p>
           <div className="flex flex-wrap items-center gap-2">
@@ -125,7 +125,7 @@ function Card({
   onClick: () => void;
 }) {
   return (
-    <button onClick={onClick} className="surface lit card-hover p-5 text-left flex flex-col gap-3 min-h-[160px]">
+    <button onClick={onClick} className="surface card-hover p-5 text-left flex flex-col gap-3 min-h-[160px]">
       <div className="flex items-start justify-between gap-3">
         <h2 className="display text-xl font-bold">{title}</h2>
         {badge && (
@@ -148,7 +148,7 @@ function Header({ title, blurb, onBack, backLabel = "← All forms" }: { title: 
           {backLabel}
         </button>
       )}
-      <h1 className="display text-3xl sm:text-4xl font-extrabold tracking-tight">{title}</h1>
+      <h1 className="display text-3xl sm:text-4xl font-semibold tracking-tight">{title}</h1>
       <p className="text-muted mt-1.5">{blurb}</p>
     </div>
   );
@@ -325,7 +325,7 @@ function FormRunner({ ctx, form, onBack }: { ctx: Ctx; form: FormDef; onBack: ()
   return (
     <div className="max-w-2xl space-y-6">
       <Header title={form.title} blurb={form.blurb} onBack={onBack} />
-      <form onSubmit={submit} className="surface lit p-5 sm:p-6 space-y-5" noValidate>
+      <form onSubmit={submit} className="surface p-5 sm:p-6 space-y-5" noValidate>
         {form.daily && (
           <div>
             <label className="label block mb-1.5" htmlFor="day">
@@ -516,7 +516,7 @@ export function CallOutcomeForm({ ctx, call, onDone, backLabel }: { ctx: Ctx; ca
         onBack={onDone}
         backLabel={backLabel}
       />
-      <form onSubmit={submit} className="surface lit p-5 sm:p-6 space-y-5">
+      <form onSubmit={submit} className="surface p-5 sm:p-6 space-y-5">
         <div>
           <label className="block text-sm font-semibold mb-1.5" htmlFor="ctype">
             Call type
@@ -677,7 +677,7 @@ export function CallOutcomeForm({ ctx, call, onDone, backLabel }: { ctx: Ctx; ca
 
         {closed && revenue && (
           <p className="text-sm text-muted">
-            Logging a close of <span className="text-gold font-semibold">{fmtMoney(Number(revenue))}</span>. Send the client their onboarding link.
+            Logging a close of <span className="text-white font-semibold">{fmtMoney(Number(revenue))}</span>. Send the client their onboarding link.
           </p>
         )}
         {err && <p className="text-danger text-sm">{err}</p>}
@@ -723,7 +723,7 @@ export function HandoffForm({ ctx, call, onDone, backLabel }: { ctx: Ctx; call: 
         onBack={onDone}
         backLabel={backLabel}
       />
-      <form onSubmit={submit} className="surface lit p-5 sm:p-6 space-y-5" noValidate>
+      <form onSubmit={submit} className="surface p-5 sm:p-6 space-y-5" noValidate>
         <FieldList fields={PRECALL_FIELDS} values={values} set={(k, v) => setValues((s) => ({ ...s, [k]: v }))} />
         {err && <p className="text-danger text-sm">{err}</p>}
         <button className="btn-primary w-full !py-3" disabled={busy}>
