@@ -30,13 +30,19 @@ def call(method, path, body=None):
         "https://api.calendly.com" + path,
         data=json.dumps(body).encode() if body is not None else None,
         method=method,
-        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json",
+                 # Calendly's firewall blocks the default Python user agent (error 1010).
+                 "User-Agent": "echelon-sales-tracker/1.0"},
     )
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
-            return r.status, json.loads(r.read() or b"{}")
+            status, raw = r.status, r.read()
     except urllib.error.HTTPError as e:
-        return e.code, json.loads(e.read() or b"{}")
+        status, raw = e.code, e.read()
+    try:
+        return status, json.loads(raw or b"{}")
+    except ValueError:
+        return status, {"message": raw.decode(errors="replace")[:200]}
 
 status, me = call("GET", "/users/me")
 if status != 200:
