@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CALENDARS, PAYMENT_METHODS, PAYMENT_TYPES, PROGRAMS, ROLES, SLACK_CHANNELS, UTM_SOURCES, type Role, type SlackChannel } from "@/lib/config";
 import { dayOf, fmtDay, fmtTime, today } from "@/lib/dates";
 import type { CallRow, MemberRow, PaymentRow } from "@/lib/types";
 import type { Ctx } from "./App";
 import { OutcomePill } from "./Dashboard";
-import { CURRENCY_SYMBOL, Modal, Pill, Table, api, fmtMoney } from "./ui";
+import { CURRENCY_SYMBOL, Modal, Pill, Stat, Table, api, fmtMoney } from "./ui";
+import { total } from "./Students";
 
 type Tab = "team" | "calls" | "payments" | "connect";
 
@@ -14,10 +15,8 @@ export function Admin({ ctx }: { ctx: Ctx }) {
   const [tab, setTab] = useState<Tab>("team");
   return (
     <div className="space-y-6">
-      <div>
-        <div className="eyebrow">Admin</div>
-        <h1 className="display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">Run the floor</h1>
-      </div>
+      <h1 className="display text-3xl sm:text-[34px] font-semibold">Admin</h1>
+      <StudentTotals />
       <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
         {(
           [
@@ -779,6 +778,30 @@ function Connect({ ctx }: { ctx: Ctx }) {
           {data.cronReady ? "CRON_SECRET is set. Reminders are ready." : "CRON_SECRET is not set yet, so reminders are off."}
         </p>
       </section>
+    </div>
+  );
+}
+
+/** Student money at a glance: the same totals as the Students tab. */
+function StudentTotals() {
+  const [t, setT] = useState<{ revenue: number; paid: number; owed: number } | null>(null);
+  useEffect(() => {
+    fetch("/api/students", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { students: { paid: number; owed: number; onPlacement: number }[] } | null) => {
+        if (!d) return;
+        const s = d.students;
+        setT({ revenue: s.reduce((a, r) => a + total(r), 0), paid: s.reduce((a, r) => a + r.paid, 0), owed: s.reduce((a, r) => a + r.owed, 0) });
+      })
+      .catch(() => null);
+  }, []);
+  if (!t) return null;
+  const gbp = (n: number) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", maximumFractionDigits: 0 }).format(n);
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <Stat label="Total revenue generated" value={gbp(t.revenue)} tone="money" big sub="All students" />
+      <Stat label="Total cash collected" value={gbp(t.paid)} tone="good" big sub={t.revenue ? `${Math.round((t.paid / t.revenue) * 100)}% of revenue` : undefined} />
+      <Stat label="Still owed" value={gbp(t.owed)} big sub="Details in the Students tab" />
     </div>
   );
 }

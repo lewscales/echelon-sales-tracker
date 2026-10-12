@@ -22,6 +22,7 @@ type Student = {
 // Whole pounds stay clean (£2,600); anything with pence shows both digits (£750.50).
 const gbp = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", maximumFractionDigits: 0 });
 const gbpPence = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 2 });
+export const total = (r: { paid: number; owed: number; onPlacement: number }) => r.paid + r.owed + r.onPlacement;
 const fmt = (n: number) => (Number.isInteger(n) ? gbp : gbpPence).format(n);
 
 export function Students({ ctx }: { ctx: Ctx }) {
@@ -64,16 +65,21 @@ export function Students({ ctx }: { ctx: Ctx }) {
   const owed = open.reduce((a, r) => a + r.owed, 0);
   const placement = open.reduce((a, r) => a + r.onPlacement, 0);
   const paid = rows.reduce((a, r) => a + r.paid, 0);
+  // A student's total = what they've paid + what they still owe + what's due on placement.
+  const revenue = rows.reduce((a, r) => a + total(r), 0);
   const noDate = open.filter((r) => r.owed > 0 && !r.dueDate).length;
   const overdue = open.filter((r) => r.owed > 0 && r.dueDate && r.dueDate < now);
 
   return (
     <div className="space-y-6">
       <Section title="Student payments" blurb="Every student on a plan with Echelon. Click any amount, date or note to change it; it saves on its own.">
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-          <Stat label="Owed now" value={fmt(owed)} tone="money" big />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Stat label="Total revenue generated" value={fmt(revenue)} tone="money" big sub={`${rows.length} students`} />
+          <Stat label="Total cash collected" value={fmt(paid)} tone="good" big sub={revenue ? `${Math.round((paid / revenue) * 100)}% of revenue` : undefined} />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <Stat label="Owed now" value={fmt(owed)} tone="money" />
           <Stat label="Due on placement" value={fmt(placement)} sub="paid once they land a role" />
-          <Stat label="Collected" value={fmt(paid)} tone="good" />
           <Stat label="Overdue" value={String(overdue.length)} tone={overdue.length ? "bad" : undefined} sub={overdue.length ? fmt(overdue.reduce((a, r) => a + r.owed, 0)) : "nothing late"} />
           <Stat label="Dates to set" value={String(noDate)} sub={noDate ? "owe money, no due date" : "all set"} />
         </div>
@@ -89,11 +95,11 @@ export function Students({ ctx }: { ctx: Ctx }) {
         ) : (
           <div className="sunken overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm border-collapse min-w-[980px]">
+              <table className="w-full text-sm border-collapse min-w-[1080px]">
                 <thead className="bg-surface2">
                   <tr>
-                    {["Student", "Paid", "Owes", "On placement", "Due date", "Status", "Notes", ""].map((h, i) => (
-                      <th key={i} className={`px-3 py-2.5 eyebrow !text-[9.5px] whitespace-nowrap ${i >= 1 && i <= 3 ? "text-right" : "text-left"}`}>
+                    {["Student", "Total", "Paid", "Owes", "On placement", "Due date", "Status", "Notes", ""].map((h, i) => (
+                      <th key={i} className={`px-3 py-2.5 eyebrow !text-[9.5px] whitespace-nowrap ${i >= 1 && i <= 4 ? "text-right" : "text-left"}`}>
                         {h}
                       </th>
                     ))}
@@ -146,6 +152,7 @@ function Row({ r, now, save, onPay, onDelete }: { r: Student; now: string; save:
       <td className="px-3 py-2 min-w-[170px]">
         <Cell value={r.name} onSave={(v) => save(r.id, { name: v.trim() })} className="font-semibold" required />
       </td>
+      <td className="px-3 py-2 w-[100px] text-right num text-muted">{fmt(total(r))}</td>
       <td className="px-3 py-2 w-[110px]">
         <MoneyCell value={r.paid} onSave={(n) => save(r.id, { paid: n })} tone="text-mint" />
       </td>
