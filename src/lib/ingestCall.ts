@@ -1,6 +1,7 @@
+import type { BookedCall } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { notifyBooking, notifyBookingChange } from "@/lib/notify";
-import { callFields } from "@/lib/records";
+import { applicationFields, callFields } from "@/lib/records";
 import { email, str } from "@/lib/validate";
 
 /**
@@ -44,6 +45,35 @@ export async function ingestCall(b: Record<string, unknown>): Promise<{ status: 
     return { status: 200, body: { ok: true, id: c.id, updated: true } };
   }
   const c = await prisma.bookedCall.create({ data: { ...(f.data as object), externalId } as never });
+  await recordAsApplication(c);
   await notifyBooking(c);
   return { status: 200, body: { ok: true, id: c.id } };
+}
+
+/**
+ * Every booking is also kept on the Applications page, so there's one running
+ * record of everyone who booked (name, phone, email, answers, when). Matched by
+ * email: someone who booked before only gets their blanks filled in.
+ */
+async function recordAsApplication(c: BookedCall) {
+  const existing = c.leadEmail ? await prisma.application.findFirst({ where: { email: c.leadEmail } }) : null;
+  if (existing) {
+    const fill: Record<string, string> = {};
+    if (!existing.phone && c.leadPhone) fill.phone = c.leadPhone;
+    if (!existing.instagram && c.instagram) fill.instagram = c.instagram;
+    if (!existing.utmSource && c.utmSource) fill.utmSource = c.utmSource;
+    if (Object.keys(fill).length) await prisma.application.update({ where: { id: existing.id }, data: fill });
+    return;
+  }
+  const f = applicationFields({
+    name: c.leadName,
+    email: c.leadEmail,
+    phone: c.leadPhone,
+    instagram: c.instagram,
+    utmSource: c.utmSource,
+    answers: c.bookingAnswers,
+    appliedAt: (c.dateBooked ?? c.createdAt).toISOString(),
+  });
+  if ("error" in f) return;
+  await prisma.application.create({ data: { ...f.data, externalId: `booking:${c.id}` } });
 }

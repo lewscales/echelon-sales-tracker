@@ -66,7 +66,15 @@ export function App() {
     const onHash = () => setTab(tabFromHash());
     window.addEventListener("hashchange", onHash);
     reload();
-    return () => window.removeEventListener("hashchange", onHash);
+    // Keep the board current: new bookings and reports show up without a manual refresh.
+    const tick = () => document.visibilityState === "visible" && reload();
+    const timer = window.setInterval(tick, 30_000);
+    document.addEventListener("visibilitychange", tick);
+    return () => {
+      window.removeEventListener("hashchange", onHash);
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", tick);
+    };
   }, [reload]);
 
   const names = useMemo(() => new Map((data?.members ?? []).map((m) => [m.id, m.name])), [data]);

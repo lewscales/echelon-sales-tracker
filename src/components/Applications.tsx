@@ -16,7 +16,7 @@ export function Applications({ ctx }: { ctx: Ctx }) {
   const { data, nameOf } = ctx;
   const [range, setRange] = useState<DateRange>({ preset: "last30" });
   const [source, setSource] = useState<string[]>([]);
-  const [view, setView] = useState<"chase" | "all">("chase");
+  const [view, setView] = useState<"chase" | "all">("all");
   const [open, setOpen] = useState<Row | null>(null);
 
   const s = useMemo(
@@ -29,14 +29,11 @@ export function Applications({ ctx }: { ctx: Ctx }) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <div className="eyebrow">Applications</div>
-        <h1 className="display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">Who applied, who booked, who to chase</h1>
-      </div>
+      <h1 className="display text-3xl sm:text-[34px] font-semibold">Applications</h1>
 
       <Section
         title="Application funnel"
-        blurb="Every application form submission, matched to booked calls by email."
+        blurb="Everyone who applied or booked a call. Bookings from Calendly land here automatically, matched by email."
         filters={
           <>
             <DateFilter label="Date applied" value={range} onChange={setRange} />
@@ -80,9 +77,18 @@ export function Applications({ ctx }: { ctx: Ctx }) {
           empty={view === "chase" ? "Nobody to chase. Everyone who applied has booked or been marked." : "No applications in this view."}
           onRowClick={setOpen}
           columns={[
-            { key: "date", label: "Applied", render: (a) => fmtDay(dayOf(a.appliedAt)) },
+            { key: "date", label: "Added", render: (a) => fmtDay(dayOf(a.appliedAt)) },
             { key: "name", label: "Name", render: (a) => <span className="font-semibold">{a.name}</span> },
             { key: "phone", label: "Phone", render: (a) => <span className="text-muted">{a.phone ?? "–"}</span> },
+            { key: "email", label: "Email", render: (a) => <span className="text-muted">{a.email ?? "–"}</span> },
+            {
+              key: "call",
+              label: "Call",
+              render: (a) => {
+                const c = a.bookedCallId ? ctx.data.calls.find((x) => x.id === a.bookedCallId) : null;
+                return c ? fmtDay(dayOf(c.dateOfCall)) : "–";
+              },
+            },
             { key: "ig", label: "Instagram", render: (a) => <span className="text-muted">{a.instagram ?? "–"}</span> },
             { key: "src", label: "Lead source", render: (a) => a.utmSource ?? "–" },
             {
